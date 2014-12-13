@@ -21,37 +21,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<meta http-equiv="description" content="This is my page">
 		<script type="text/javascript" src="${frontPath}/js/jquery-2.1.1.js"></script>
 		<script type="text/javascript">
-		var picList ="";
   		$(function(){
 	  		$("a#insert").click(function() {
 	  			jQuery.ajax({
-	  				type: "post",
-			 	    data:{name:$("input[name='name']").val()}, 
-			 	    dataType: "json",
-			 	    url:"${frontPath}/user/insertUser.json",
-				    success: function(data) {
-						alert("done");
-				    },
-			 	    error:function(XMLHttpRequest, textStatus, errorThrown){
-			 	    	alert(XMLHttpRequest.status);
-                        alert(XMLHttpRequest.readyState);
-                        alert(textStatus);
-			 	    }
- 				});
+			 	      	type: "post",
+						data:{name:$("input[name='name']").val()}, 
+						dataType: "json",
+						url:"${frontPath}/user/insertUser.json",
+						success: function(data) {
+							$.alert("success");
+						},
+						error:function(err){
+							alert("faile"+err);	
+						}
+				});
 			});
-	  		
-	  	//上传完毕图片后
-	  	$("#del").click(function(){
-    				jQuery.ajax({
-			 	       type: "post",
-			 	       data:{userName:$("input[name='name']").val()},
-			 	       dataType: "json",
-			 	       url: "${frontPath}/user/val.json",
-				        success: function(data) {
-				        	alert("input userName:"+data.name);
-				        }
-    				});
-	  	})
   		});
   		</script>
 	</head>
@@ -62,6 +46,5 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<input name="name" value="">
 		<a id="insert" href="javascrpt:void(0)">insert</a>
 	</div>
-	<div id="del">delete pictrue</div>
 	</body>
 </html>
