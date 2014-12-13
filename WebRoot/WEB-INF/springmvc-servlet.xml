@@ -8,9 +8,33 @@
 	            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
-<!--	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />-->
+	<!-- <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" /> -->
 	<!-- 启动注解驱动 SpringMVC 功能 -->
-	<mvc:annotation-driven />	
+	<mvc:annotation-driven />
+	<!-- 配置springmvc对异步请求json的响应，如果页面有异步请求处理就必须有该配置，否则异步请求就会提示找不到页面，而且还需要在异步请求的方法上添加@ResponseBody 注解，否则不会生效 -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html; charset=UTF-8</value>
+							<value>application/json;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+				<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html; charset=UTF-8</value>
+							<value>application/json;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
 	<!-- 扫描所有的 controller -->
 	<context:component-scan base-package="com.yhq.*" />
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
