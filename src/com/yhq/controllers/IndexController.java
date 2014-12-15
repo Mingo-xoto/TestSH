@@ -10,7 +10,7 @@ public class IndexController {
 
     @RequestMapping("/")
     public String index(ModelMap map) {
-	System.out.println("index...");
+	System.out.println("index view..");
 	return PATH + "index";
     }
 }
