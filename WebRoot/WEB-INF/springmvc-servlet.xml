@@ -42,6 +42,7 @@
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp"></property>
 	</bean>
+<<<<<<< HEAD
 
 	<!-- Quartz定时器开始 -->
 	<!-- 配置需要定时的bean类 -->
@@ -84,3 +85,6 @@
 	</bean>
 	<!-- Quartz定时器结束 -->
 </beans>
+=======
+</beans>
+>>>>>>> origin/master
