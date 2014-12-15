@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class IndexController {
     private String PATH = "/";
 
-    @RequestMapping("/test")
+    @RequestMapping("/")
     public String index(ModelMap map) {
 	System.out.println("index...");
 	return PATH + "index";

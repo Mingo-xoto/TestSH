@@ -11,6 +11,7 @@ import com.yhq.service.IUserService;
 @Service("userService")
 @Transactional("transactionManager")
 public class UserService implements IUserService {
+
     @Autowired
     private IUserDao userDao;
 
@@ -20,7 +21,7 @@ public class UserService implements IUserService {
     }
 
     public boolean select(String id) {
-	if (userDao.select(id) == null){
+	if (userDao.select(id) == null) {
 	    System.out.println("id doesn't exsist");
 	    return false;
 	}

@@ -8,9 +8,33 @@
 	            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
-<!--	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />-->
+	<!-- <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" /> -->
 	<!-- 启动注解驱动 SpringMVC 功能 -->
-	<mvc:annotation-driven />	
+	<mvc:annotation-driven />
+	<!-- 配置springmvc对异步请求json的响应，如果页面有异步请求处理就必须有该配置，否则异步请求就会提示找不到页面，而且还需要在异步请求的方法上添加@ResponseBody 注解，否则不会生效 -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html; charset=UTF-8</value>
+							<value>application/json;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+				<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html; charset=UTF-8</value>
+							<value>application/json;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
 	<!-- 扫描所有的 controller -->
 	<context:component-scan base-package="com.yhq.*" />
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -18,4 +42,45 @@
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp"></property>
 	</bean>
+
+	<!-- Quartz定时器开始 -->
+	<!-- 配置需要定时的bean类 -->
+	<bean id="quartzUtil" class="com.yhq.util.QuartzUtil"></bean>
+	<!-- 配置代理类 -->
+	<bean id="startTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 要调用的bean -->
+		<property name="targetObject" ref="quartzUtil"></property>
+		<!-- 要调用的Method -->
+		<property name="targetMethod" value="run"></property>
+		<!-- 是否并发,false表示 如果发生错误也不影响下一次的调用 -->
+		<property name="concurrent" value="false"></property>
+	</bean>
+	 <bean id="startTask2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> 
+	<!-- 要调用的bean -->
+	 <property name="targetObject" ref="quartzUtil"></property> 
+	<!-- 要调用的Method -->
+	 <property name="targetMethod" value="start2"></property> 
+	<!-- 是否并发,false表示 如果发生错误也不影响下一次的调用 -->
+	 <property name="concurrent" value="false"></property> 
+	 </bean> 
+
+	<!-- 配置触发器 可配置多个 -->
+	<bean id="startTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="startTask"></property>
+		<property name="cronExpression" value="0 41 10 * * ?"></property> <!--每天的早上10点22分每隔一秒执行一次 -->
+	</bean>
+	 <bean id="start2Trigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> 
+	 <property name="jobDetail" ref="startTask2"></property> 
+	 <property name="cronExpression" value="0/1 41 10 * * ?"></property> <!--  每天10点02分开始，每隔三小时执行一次 -->
+	 </bean> 
+	<!-- 总调度,用于启动定时器 -->
+	<bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="startTrigger" />
+				 <ref bean="start2Trigger"/> 
+			</list>
+		</property>
+	</bean>
+	<!-- Quartz定时器结束 -->
 </beans>
