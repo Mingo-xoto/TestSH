@@ -22,7 +22,7 @@ public class UserService implements IUserService {
 
     public boolean select(String id) {
 	if (userDao.select(id) == null) {
-	    System.out.println("id doesn't exsist");
+	    System.out.println("This id doesn't exsist");
 	    return false;
 	}
 	return true;
